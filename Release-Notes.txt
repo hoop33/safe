@@ -1,0 +1,27 @@
+Safe Release Notes
+------------------
+0.5 (April 6, 2008)
+-------------------
+[FIXED] Version number in help output corrected
+[NEW] Added diff and merge capabilities
+[CHANGE] Incorrect password no longer displays stack trace
+
+0.4 (April 4, 2008)
+-------------------
+[FIXED] Passwords stopped authenticating (change in REXML perhaps?--whitespace returned in salt and hash), so moved salt
+        and hash to attributes of root
+
+0.3 (September 7, 2007)
+-----------------------
+[NEW] Added support files to gem
+[NEW] Specified versions for highline and crypt
+[NEW] Changed executable from 'safe.rb' to 'safe'
+
+0.2 (August 19, 2007)
+---------------------
+[NEW] Change password of safe file (-p, --password flag)
+[NEW] Packaged as gem
+
+0.1 (May 12, 2007)
+------------------
+Initial Release

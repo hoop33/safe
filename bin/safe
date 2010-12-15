@@ -1,0 +1,119 @@
+#!/usr/bin/env ruby
+
+########################################################################
+# safe: Safe Storage for Passwords.
+# Stores user IDs and passwords, encrypted by a password.
+#
+# Copyright (c) 2007, Rob Warner
+#
+# All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
+#
+#   * Redistributions of source code must retain the above copyright notice,
+#     this list of conditions and the following disclaimer.
+#   * Redistributions in binary form must reproduce the above copyright notice,
+#     this list of conditions and the following disclaimer in the documentation
+#     and/or other materials provided with the distribution.
+#   * Neither the name of Rob Warner nor the names of its contributors may be
+#     used to endorse or promote products derived from this software without
+#     specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+# "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+# LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+# A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+# CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+# EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+# PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+# PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+# LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+# NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+# SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+########################################################################
+require 'rubygems'
+require 'optparse'
+require File.join(File.dirname(__FILE__), '..', 'lib', 'safeentry')
+require File.join(File.dirname(__FILE__), '..', 'lib', 'safefile')
+require File.join(File.dirname(__FILE__), '..', 'lib', 'safeutils')
+
+# TODO support list <NAME> without -l flag
+
+class Safe
+  SAFE_VERSION = '0.5'
+  
+  # Gets the command line
+  def self.get_command_line
+    options = {}
+    options[:action] = 'list'
+    opts = OptionParser.new
+    opts.banner = 'Usage: safe [options]'
+    opts.separator ''
+    opts.separator 'Options:'
+    opts.on('-a', '--add NAME', 'Add an entry') do |val|
+      options[:name] = val
+      options[:action] = 'add'
+    end
+    opts.on('-c', '--count', 'Print the count of entries') do
+      options[:action] = 'count'
+    end
+    opts.on('-d', '--delete NAME', 'Delete an entry') do |val|
+      options[:name] = val
+      options[:action] = 'delete'
+    end
+    opts.on('-i', '--import FILE', 'Import a file in <name,ID,password> format') do |val|
+      options[:name] = val
+      options[:action] = 'import'
+    end
+    opts.on('-l', '--list NAME', 'List an entry') do |val|
+      options[:name] = val
+      options[:action] = 'list'
+    end
+    opts.on('-v', '--version', 'Print version') do
+      options[:action] = 'version'
+    end
+    opts.on('-p', '--password', 'Change password') do
+      options[:action] = 'password'
+    end
+    opts.on('-f', '--diff DIR', 'Diff against password file in directory DIR') do |val|
+      options[:name] = val
+      options[:action] = 'diff'
+    end
+    opts.on('-m', '--merge DIR', 'Merge with password file in directory DIR') do |val|
+      options[:name] = val
+      options[:action] = 'merge'
+    end
+    opts.parse! rescue abort [$!.message, opts].join("\n")
+    options
+  end
+  
+  # Main
+  def self.run
+    options = get_command_line
+    if options[:action] == 'version'
+      puts "Safe version #{SAFE_VERSION}, Copyright (C) 2007 Rob Warner"
+    else
+      begin
+        dir = SafeUtils::get_safe_dir
+        file = SafeUtils::get_safe_file(dir)
+
+        # Perform the requested action
+        case options[:action]
+          when 'list': file.list(options[:name])
+          when 'add': file.add(options[:name])
+          when 'delete': file.delete(options[:name])
+          when 'count': puts file.count
+          when 'password': file.change_password
+          when 'import': SafeUtils::import(file, options[:name])
+          when 'diff': SafeUtils::diff(file, options[:name])
+          when 'merge': SafeUtils::merge(file, options[:name])
+        end
+      rescue
+        abort $!.message
+      end
+    end
+  end
+end
+
+Safe.run

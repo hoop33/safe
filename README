@@ -1,0 +1,202 @@
+=== Safe ===
+Safe is a command line password management program. It securely stores all your
+user IDs and passwords using a single password as the master key. It stores the
+master key as a hash (SHA2), and uses it to encrypt the rest of the data using
+Blowfish.
+
+== A Note About Moving from 0.3 to 0.4 ==
+The format of the file changed slightly. Specifically, the salt and hash values
+were changed to be attributes of the root safe element. You must edit your
+.safe.xml file accordingly.
+
+Example:
+0.3 version:
+<safe>
+<salt>
+foo
+</salt>
+<hash>
+bar
+</hash>
+<entries>
+...
+</entries>
+</salt>
+
+0.4 version:
+<safe salt="foo" hash="bar">
+<entries>
+...
+</entries>
+</salt>
+
+This is a one-time operation.
+
+== License ==
+Safe is licensed under the BSD License. Copyright (c) 2007, Rob Warner
+
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without modification,
+are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice,
+      this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright notice,
+      this list of conditions and the following disclaimer in the documentation
+      and/or other materials provided with the distribution.
+    * Neither the name of Rob Warner nor the names of its contributors may be
+      used to endorse or promote products derived from this software without
+      specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+== Installation ==
+To install safe, you must have Ruby and Ruby Gems installed. From the command
+line, type:
+
+  gem install safe
+
+safe depends on two gems:
+
+  1) crypt
+  2) highline
+  
+Also, you must set up an environment variable called SAFE_DIR that points to the
+directory in which your encrypted password file (called .safe.xml) will be
+stored. Examples:
+
+Linux/Mac OS X:
+  export SAFE_DIR=~
+
+Windows:
+  set SAFE_DIR=c:\data
+
+== Version History ==
+0.1 -- May 12, 2007
+0.2 -- August 19, 2007
+0.3 -- September 7, 2007
+0.4 -- April 4, 2008
+0.5 -- April 6, 2008
+
+See Release-Notes.txt for more information
+
+== Usage ==
+Run safe by typing:
+
+  safe
+
+The first time you run safe, you will be prompted for a password, and a new 
+password file (.safe.xml) will be created in the directory specified by
+SAFE_DIR, like this:
+
+  $ safe
+  Password: ****
+  Creating new file . . .
+
+If you have not set up the SAFE_DIR environment variable, you will see this
+message:
+
+  Set environment variable SAFE_DIR to the directory for your safe file
+
+To correct, set the SAFE_DIR environment variable.
+
+If you have set up SAFE_DIR to point to a non-existent directory, you will see
+this message:
+
+  Environment variable SAFE_DIR does not point to an existing directory
+  (/home/foo)
+
+where "/home/foo" is the value of SAFE_DIR. To correct, point SAFE_DIR to an
+existing directory.
+
+If you type:
+
+  safe -h
+  
+the available options display. They are:
+
+Usage: safe [options]
+
+Options:
+    -a, --add NAME                   Add an entry
+    -c, --count                      Print the count of entries
+    -d, --delete NAME                Delete an entry
+    -i, --import FILE                Import a file in <name,ID,password> format
+    -l, --list NAME                  List an entry
+    -v, --version                    Print version
+    -p, --password                   Change password
+    -f, --diff DIR                   Diff against password file in directory DIR
+    -m, --merge DIR                  Merge with password file in directory DIR
+
+For example, to add an entry to your password file for Rubyforge.org, you type:
+
+  safe -a Rubyforge.org
+  
+You will be prompted for your master password, and then your Rubyforge.org
+user ID and password, like this:
+
+  Password: ****
+  Rubyforge.org User ID: myuserid
+  Rubyforge.org Password: ****
+
+NOTE: If NAME contains spaces, you must surround it in quotes, like this:
+
+  safe -a "A Cool Site"
+  
+To list your Rubyforge.org password, you type:
+
+  safe -l Rubyforge.org
+  
+You will be prompted for your master password, and then your Rubyforge.org
+user ID and password will display, like this:
+
+  Rubyforge.org     myuserid        mypassword
+
+NOTE: The NAME you pass to -l is not case sensitive, and will find all entries
+beginning with NAME. For example, typing:
+
+  safe -l r
+  
+will list all entries beginning with "r" or "R."
+
+To delete your Rubyforge.org password, you type:
+
+  safe -d Rubyforge.org
+  
+You will be prompted for your master password, and then your Rubyforge.org
+password is irretrievably deleted. You will not be asked to confirm the
+deletion.
+
+== Diff and Merge ==
+Diffing and merging deviates slightly from diffing and merging other types of
+files, since typically users want a union of the files without deleting any
+entries. Consequently, instead of Add/Delete/Change, the output of diff will
+indicate Master/Other/Change, meaning the entry is only in the Master copy
+(the one in the directory pointed to by SAFE_DIR), the Other copy (the one in
+the directory passed on the command line), or is in both but has been Changed,
+respectively.
+
+Merge does two things:
+1) Adds all entries from the Other copy that don't exist in the Master copy
+   to the Master copy
+2) Interactively performs requested changes to changed entries on the Master
+   copy
+
+== Backups ==
+Please back up your .safe.xml file! See License section for disclaimer
+information.
+
+== Contact ==
+You can contact me, Rob Warner, at rwarner@grailbox.com.
+
