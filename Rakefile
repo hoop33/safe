@@ -47,7 +47,9 @@ task :web do
   readme = f.read
   f.close
 
-  # Transform the headings
+  # Transform as necessary
+  readme.gsub!(/</, '&lt;')
+  readme.gsub!(/>/, '&gt;')
   readme.gsub!(/===(.*?)===/, '<h1>\1</h1>')
   readme.gsub!(/==(.*?)==/, '<h2>\1</h2>')
   readme.gsub!(/\n/, '<br />')
