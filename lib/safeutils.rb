@@ -122,10 +122,8 @@ class SafeUtils
   def SafeUtils.do_merge(safe_file, diffs, override_master = false)
     diffs.each do |diff|
       case diff.operation
-      when SafeDiff::MASTER: # Do nothing
-      when SafeDiff::OTHER:  # Add to safe file
-        safe_file.insert(diff.other.name, diff.other.id, diff.other.password)
-      when SafeDiff::CHANGE: # Update safe file
+      when SafeDiff::OTHER then safe_file.insert(diff.other.name, diff.other.id, diff.other.password)
+      when SafeDiff::CHANGE then # Update safe file
         if override_master || replace_master?(diff)
           safe_file.insert(diff.other.name, diff.other.id, diff.other.password)
         end

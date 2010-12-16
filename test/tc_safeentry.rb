@@ -7,7 +7,7 @@
 # http://www.eclipse.org/legal/epl-v10.html 
 ########################################################################
 
-require File.join(File.dirname(__FILE__), '..', 'lib', 'safeentry')
+require File.join('.', File.dirname(__FILE__), '..', 'lib', 'safeentry')
 require 'test/unit'
 
 class SafeDirTest < Test::Unit::TestCase

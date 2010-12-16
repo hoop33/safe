@@ -1,5 +1,11 @@
 Safe Release Notes
 ------------------
+0.6 (December 16, 2010)
+-----------------------
+[FIXED] Fix paths for required files to include current directory (1.9)
+[FIXED] Fix when statements to use then instead of : (1.9)
+Note that safe still doesn't work under Ruby 1.9, as the Blowfish gem still doesn't work under 1.9
+
 0.5 (April 6, 2008)
 -------------------
 [FIXED] Version number in help output corrected

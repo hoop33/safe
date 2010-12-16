@@ -7,7 +7,7 @@
 # http://www.eclipse.org/legal/epl-v10.html
 ########################################################################
 
-require File.join(File.dirname(__FILE__), '..', 'lib', 'safediff')
+require File.join('.', File.dirname(__FILE__), '..', 'lib', 'safediff')
 require 'test/unit'
 
 class SafeDiffTest < Test::Unit::TestCase

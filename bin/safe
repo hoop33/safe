@@ -34,14 +34,14 @@
 ########################################################################
 require 'rubygems'
 require 'optparse'
-require File.join(File.dirname(__FILE__), '..', 'lib', 'safeentry')
-require File.join(File.dirname(__FILE__), '..', 'lib', 'safefile')
-require File.join(File.dirname(__FILE__), '..', 'lib', 'safeutils')
+require File.join('.', File.dirname(__FILE__), '..', 'lib', 'safeentry')
+require File.join('.', File.dirname(__FILE__), '..', 'lib', 'safefile')
+require File.join('.', File.dirname(__FILE__), '..', 'lib', 'safeutils')
 
 # TODO support list <NAME> without -l flag
 
 class Safe
-  SAFE_VERSION = '0.5'
+  SAFE_VERSION = '0.6'
   
   # Gets the command line
   def self.get_command_line
@@ -92,7 +92,7 @@ class Safe
   def self.run
     options = get_command_line
     if options[:action] == 'version'
-      puts "Safe version #{SAFE_VERSION}, Copyright (C) 2007 Rob Warner"
+      puts "Safe version #{SAFE_VERSION}, Copyright (C) 2010 Rob Warner"
     else
       begin
         dir = SafeUtils::get_safe_dir
@@ -100,14 +100,14 @@ class Safe
 
         # Perform the requested action
         case options[:action]
-          when 'list': file.list(options[:name])
-          when 'add': file.add(options[:name])
-          when 'delete': file.delete(options[:name])
-          when 'count': puts file.count
-          when 'password': file.change_password
-          when 'import': SafeUtils::import(file, options[:name])
-          when 'diff': SafeUtils::diff(file, options[:name])
-          when 'merge': SafeUtils::merge(file, options[:name])
+          when 'list' then file.list(options[:name])
+          when 'add' then file.add(options[:name])
+          when 'delete' then file.delete(options[:name])
+          when 'count' then puts file.count
+          when 'password' then file.change_password
+          when 'import' then SafeUtils::import(file, options[:name])
+          when 'diff' then SafeUtils::diff(file, options[:name])
+          when 'merge' then SafeUtils::merge(file, options[:name])
         end
       rescue
         abort $!.message
