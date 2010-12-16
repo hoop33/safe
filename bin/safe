@@ -100,14 +100,14 @@ class Safe
 
         # Perform the requested action
         case options[:action]
-          when 'list': file.list(options[:name])
-          when 'add': file.add(options[:name])
-          when 'delete': file.delete(options[:name])
-          when 'count': puts file.count
-          when 'password': file.change_password
-          when 'import': SafeUtils::import(file, options[:name])
-          when 'diff': SafeUtils::diff(file, options[:name])
-          when 'merge': SafeUtils::merge(file, options[:name])
+          when 'list' then file.list(options[:name])
+          when 'add' then file.add(options[:name])
+          when 'delete' then file.delete(options[:name])
+          when 'count' then puts file.count
+          when 'password' then file.change_password
+          when 'import' then SafeUtils::import(file, options[:name])
+          when 'diff' then SafeUtils::diff(file, options[:name])
+          when 'merge' then SafeUtils::merge(file, options[:name])
         end
       rescue
         abort $!.message
