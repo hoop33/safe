@@ -1,6 +1,9 @@
 ########################################################################
 # safeutils.rb
-# Copyright (c) 2007, Rob Warner
+# Copyright (c) 2007, 2011 Rob Warner
+# rwarner@grailbox.com
+# http://grailbox.com
+# @hoop33
 #
 # All rights reserved.
 #

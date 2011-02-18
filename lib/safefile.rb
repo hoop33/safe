@@ -1,6 +1,9 @@
 ########################################################################
 # safefile.rb
-# Copyright (c) 2007, Rob Warner
+# Copyright (c) 2007, 2011 Rob Warner
+# rwarner@grailbox.com
+# http://grailbox.com
+# @hoop33
 #
 # All rights reserved.
 #
@@ -28,12 +31,12 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ########################################################################
+require File.join(File.dirname(__FILE__), 'blowfish')
 require 'rubygems'
-require 'crypt/blowfish'
-require 'digest/sha2'
 require 'rexml/document'
 require 'fileutils'
 require 'base64'
+require 'digest/sha2'
 
 include REXML
 
@@ -72,10 +75,11 @@ class SafeFile
       @salt = root.attributes["salt"]
       @hash = root.attributes["hash"]
       if authorized?
-        crypt_key = Crypt::Blowfish.new(self.password)
+#        crypt_key = Crypt::Blowfish.new(self.password)
         e_entries = root.elements["entries"]
         e_entries.elements.each("entry") do |entry|
-          fields = crypt_key.decrypt_string(Base64::decode64(entry.cdatas[0].to_s)).split("\t")
+#          fields = crypt_key.decrypt_string(Base64::decode64(entry.cdatas[0].to_s)).split("\t")
+          fields = Blowfish.decrypt(self.password, Base64::decode64(entry.cdatas[0].to_s)).split("\t")
           fields.length == 3 ? insert(fields[0], fields[1], fields[2]) : puts("Cannot parse #{fields}, discarding.")
         end
       else
@@ -101,11 +105,12 @@ class SafeFile
     root.attributes["hash"] = @hash
     doc.add_element root
 
-    crypt_key = Crypt::Blowfish.new(self.password)
+    #crypt_key = Crypt::Blowfish.new(self.password)
     e_entries = Element.new "entries"
     @entries.each_value do |entry|
       e = Element.new "entry"
-      CData.new Base64.encode64(crypt_key.encrypt_string(entry.to_s)), true, e
+      #CData.new Base64.encode64(crypt_key.encrypt_string(entry.to_s)), true, e
+      CData.new Base64.encode64(Blowfish.encrypt(self.password, entry.to_s)), true, e
       e_entries.add_element e
     end
     root.add_element e_entries

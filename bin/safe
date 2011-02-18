@@ -4,7 +4,10 @@
 # safe: Safe Storage for Passwords.
 # Stores user IDs and passwords, encrypted by a password.
 #
-# Copyright (c) 2007, Rob Warner
+# Copyright (c) 2007, 2011 Rob Warner
+# rwarner@grailbox.com
+# http://grailbox.com
+# @hoop33
 #
 # All rights reserved.
 #
@@ -34,6 +37,7 @@
 ########################################################################
 require 'rubygems'
 require 'optparse'
+
 require File.join('.', File.dirname(__FILE__), '..', 'lib', 'safeentry')
 require File.join('.', File.dirname(__FILE__), '..', 'lib', 'safefile')
 require File.join('.', File.dirname(__FILE__), '..', 'lib', 'safeutils')
