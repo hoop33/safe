@@ -1,32 +1,31 @@
-require 'openssl'
-
-module Blowfish
-  ULONG = 0x100000000
-
-  def self.cipher(mode, key, data)
-    cipher = OpenSSL::Cipher::Cipher.new('bf').send(mode)
-    cipher.key = Digest::SHA256.digest(massage_key(key))
-    cipher.update(data) << cipher.final
-  end
-
-  def self.encrypt(key, data)
-    cipher(:encrypt, key, data)
-  end
-
-  def self.decrypt(key, text)
-    cipher(:decrypt, key, text)
-  end
-
-  def self.massage_key(key)
-    massaged_key = key
-    keypos = 0
-    0.upto(17) { |i|
-      data = 0
-      4.times {
-        data = ((data << 8) | massaged_key[keypos].ord) % ULONG
-        keypos = (keypos.next) % massaged_key.length
+module Crypt
+  class Blowfish
+    def setup_blowfish()
+      @sBoxes = Array.new(4) { |i| INITIALSBOXES[i].clone }                                                                                                                                                     
+      @pArray = INITIALPARRAY.clone
+      keypos = 0
+      0.upto(17) { |i|
+        data = 0
+        4.times {
+          data = ((data << 8) | @key[keypos].ord) % ULONG
+          keypos = (keypos.next) % @key.length
+        }
+        @pArray[i] = (@pArray[i] ^ data) % ULONG
       }
-    }
-    massaged_key
+      l = 0
+      r = 0
+      0.step(17, 2) { |i|
+        l, r = encrypt_pair(l, r)
+        @pArray[i]   = l
+        @pArray[i+1] = r
+      }
+      0.upto(3) { |i|
+        0.step(255, 2) { |j|                                                                                                                                                                                    
+          l, r = encrypt_pair(l, r)
+          @sBoxes[i][j]   = l
+          @sBoxes[i][j+1] = r
+        }
+      }
+    end
   end
 end
