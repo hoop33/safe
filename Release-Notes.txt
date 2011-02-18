@@ -1,5 +1,9 @@
 Safe Release Notes
 ------------------
+0.7 (February 18, 2011)
+-----------------------
+[FIXED] Monkey patch crypt/blowfish so that safe runs under ruby 1.9
+
 0.6 (December 16, 2010)
 -----------------------
 [FIXED] Fix paths for required files to include current directory (1.9)
