@@ -38,14 +38,14 @@
 require 'rubygems'
 require 'optparse'
 
-require File.join('.', File.dirname(__FILE__), '..', 'lib', 'safeentry')
-require File.join('.', File.dirname(__FILE__), '..', 'lib', 'safefile')
-require File.join('.', File.dirname(__FILE__), '..', 'lib', 'safeutils')
+require File.join(File.dirname(__FILE__), '..', 'lib', 'safeentry')
+require File.join(File.dirname(__FILE__), '..', 'lib', 'safefile')
+require File.join(File.dirname(__FILE__), '..', 'lib', 'safeutils')
 
 # TODO support list <NAME> without -l flag
 
 class Safe
-  SAFE_VERSION = '0.7'
+  SAFE_VERSION = '0.8'
   
   # Gets the command line
   def self.get_command_line
