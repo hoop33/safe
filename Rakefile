@@ -7,7 +7,7 @@ gem_spec = Gem::Specification.new do |spec|
   spec.summary = 'A command-line password storage program'
   spec.description = %{safe safely stores all your user IDs and passwords,
   encrypted by a password of your choosing.}
-  spec.version = '0.6'
+  spec.version = '0.7'
   
   # Author information
   spec.author = 'Rob Warner'
